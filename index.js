@@ -1,4 +1,5 @@
 class User {
+
     constructor( nombre, apellido, libros, mascotas ) {
 
         this.nombre = nombre,
@@ -61,6 +62,7 @@ class User {
     const user = new User(nombre, apellido, libros, mascotas)
 
     console.log(user.getFullName())
+    
     user.addMascota('hamster')
     console.log(user.countMascotas());
 
