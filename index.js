@@ -16,7 +16,6 @@ class User {
 
     addMascota(mascota) {
         this.mascotas.push(mascota)
-        console.log(this.mascotas);
     }
 
     countMascotas() {
@@ -26,7 +25,6 @@ class User {
     addBook(libro, autor) {
         let nuevoLibro = { autor: autor, nombre: libro}
         this.libros.push(nuevoLibro)
-        console.log(this.libros);
     }
 
     getBookNames() {
@@ -61,13 +59,13 @@ class User {
 
     const user = new User(nombre, apellido, libros, mascotas)
 
-    console.log(user.getFullName())
-    
+    console.log("Nombre completo: ",user.getFullName())
+
     user.addMascota('hamster')
-    console.log(user.countMascotas());
+    console.log("Cantidad de mascotas ",user.countMascotas());
 
     user.addBook('La Odisea','Homero')
 
-    console.log(user.getBookNames());
+    console.log("Nombres de los libros ",user.getBookNames());
 
 })()
