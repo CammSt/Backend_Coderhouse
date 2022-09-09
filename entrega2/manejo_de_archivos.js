@@ -27,7 +27,7 @@ class Contenedor {
 
     async writeFile(content) {
         try {
-            await fs.promises.writeFile(`./${this.archivo}`,JSON.stringify(content), 'utf-8')
+            await fs.promises.writeFile(`./${this.archivo}`,JSON.stringify(content,null,2), 'utf-8')
         } catch (error) {
             throw new Error(error.message)
         }
@@ -36,11 +36,13 @@ class Contenedor {
     async save(itemToSave) {
         //Recibe un objeto, lo guarda en el archivo, devuelve el id asignado
 
+        let auxItem = itemToSave
+
         if( await this.fileExists() === false ) {
 
             let productos = []
-            itemToSave.id = 0
-            productos.push(itemToSave)
+            auxItem.id = 0
+            productos.push(auxItem)
 
             await this.writeFile(productos)
 
@@ -48,12 +50,12 @@ class Contenedor {
 
             let data = await this.readFile()
             
-            itemToSave.id = data[data.length - 1].id + 1
-            data.push(itemToSave)
+            auxItem.id = data[data.length - 1].id + 1
+            data.push(auxItem)
 
             await this.writeFile(data)
         }        
-        return itemToSave.id
+        return auxItem.id
     }   
     
     async getById(searchedId) {
@@ -112,7 +114,7 @@ class Contenedor {
 }
 
 
-( async function() {
+/* ( async function() {
    
     const contenedor = new Contenedor('productos.txt')
 
@@ -135,4 +137,6 @@ class Contenedor {
     await contenedor.deleteById(0) 
     await contenedor.deleteAll()
 
-})()
+})() */
+
+module.exports = Contenedor;
