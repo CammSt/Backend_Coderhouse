@@ -26,7 +26,7 @@ router.post('/productos', ( request , response ) => {
     producto.id = Producto.productos.length + 1;
     Producto.productos.push(producto);
 
-    response.send("el producto agregado es: " + producto.title);
+    response.send(Producto.productos);
 });
 
 router.put('/productos/:id', ( request , response ) => {
