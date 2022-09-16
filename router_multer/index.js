@@ -2,9 +2,6 @@ const express = require('express')
 const routerProductos = require('./routers/productos');
 const app = express()
 
-// const PORT = process.env.NODE_PORT
-const ENV = process.env.NODE_ENV
-
 const PORT = 8080
 
 const server = app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
