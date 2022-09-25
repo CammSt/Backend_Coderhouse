@@ -1,42 +1,43 @@
 const router = require('express').Router();
 
-const Producto = require('../components/Producto');
+const ProductsContainer = require('../components/ProductsContainer');
+const product = new ProductsContainer()
 
 
 router.get('/productos', ( request , response ) => {
-    response.send(Producto.productos);
+    product.getProducts()
+    response.send(product.getProducts());
 });
 
 router.get('/productos/:id', ( request , response ) => {
 
-    let producto = Producto.productos.find(producto => producto.id === Number(request.params.id));
+    let searchedProduct = product.findProduct(Number(request.params.id))
 
-    if (producto) {
-        response.send(producto);
+    if (searchedProduct) {
+        response.send(searchedProduct);
     } else {
         response.status(404).send({ error: 'Producto no encontrado' });
     }
 });
 
 router.post('/productos', ( request , response ) => {
-
     let { title, price, thumbnail } = request.body;
-    const producto = { title, price, thumbnail };
+    const newProduct = { title, price, thumbnail };
 
-    producto.id = Producto.productos.length + 1;
-    Producto.productos.push(producto);
-
-    response.send(Producto.productos);
+    product.addProduct(newProduct)
+    response.send(product.getProducts());
+    
 });
 
 router.put('/productos/:id', ( request , response ) => {
-    let { title, price, thumbnail } = request.body;
-    let index = Producto.productos.findIndex(producto => producto.id === Number(request.params.id));
+    let id = Number(request.params.id)
+    let body = request.body
 
-    if (index >= 0) {
-        Producto.productos[index] = { title, price, thumbnail };
-        Producto.productos[index].id = Number(request.params.id);
-        response.send(Producto.productos[index]);
+    let productExists = product.productExists(id)
+
+    if (productExists) {
+        let updated = product.updateProduct(id, body)
+        response.send(updated);
 
     } else {
         response.status(404).send({ error: 'Producto no encontrado' });
@@ -44,10 +45,15 @@ router.put('/productos/:id', ( request , response ) => {
 });
 
 router.delete('/productos/:id', ( request , response ) => {
-    let index = Producto.productos.findIndex(producto => producto.id === Number(request.params.id));
-    if (index >= 0) {
-        Producto.productos.splice(index, 1);
+    let id = Number(request.params.id)
+
+    let productExists = product.productExists(id)
+
+    if (productExists) {
+
+        product.deleteProduct(id);
         response.send({ message: 'Producto eliminado' });
+
     } else {
         response.status(404).send({ error: 'Producto no encontrado' });
     }
