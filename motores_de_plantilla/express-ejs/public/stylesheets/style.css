@@ -1,8 +1,57 @@
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  
 }
 
 a {
   color: #00B7FF;
+}
+
+h1 {
+  width: 70%;
+  color: #DE4E53;
+}
+
+.formContainer {
+  text-align: center;
+  width: 70%;
+}
+
+.formItem {
+  margin-bottom: 3%;
+  text-align: left;
+}
+
+.formLabel { 
+  margin-bottom: 2%;
+  text-decoration: underline;
+  padding-left: 2%;
+  
+}
+
+.submitButton {
+  background-color: #DE4E53;
+  border-color: #DE4E53;
+  width: 50%;
+}
+
+.submitButton:active {
+  background-color: #DE4E53;
+  border-color: #DE4E53;
+  width: 50%;
+}
+
+.goBackButton {
+  margin-bottom: 3%;
+  background-color: #DE4E53;
+  border-color: #DE4E53;
+  padding-inline: 2%;
+  color: white;
+  border-radius: .5vw;
+}
+
+.tableImage {
+  width: 7vw;
+  height: 7vw;
 }
