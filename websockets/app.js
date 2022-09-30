@@ -16,7 +16,7 @@ const PORT = process.env.NODE_PORT
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
-app.use('/static', express.static(path.join(__dirname, 'public')));
+app.use(express.static('public'));
 
 
 app.engine('handlebars', engine())
@@ -36,3 +36,33 @@ server.listen(PORT, () => {
 })
 
 server.on("error", error => console.log(`Error en servidor ${error}`))
+
+io.on('connection', async(socket) => {
+    console.log('🟢 Usuario conectado')
+    
+    /* const productos = await contenedor.getAll();
+    socket.emit('bienvenidoLista', productos )
+    
+    const mensajes = await chat.getAll();
+    socket.emit('listaMensajesBienvenida', mensajes)
+    
+    socket.on('nuevoMensaje', async(data) => {
+        await chat.save(data);
+        
+        const mensajes = await chat.getAll();
+        io.sockets.emit('listaMensajesActualizada', mensajes)
+    })
+
+    socket.on('productoAgregado', async(data) => {
+        console.log('Alguien presionó el click')
+        await contenedor.save(data);
+        
+        const productos = await contenedor.getAll();
+        io.sockets.emit('listaActualizada', productos);
+    }) */
+    
+    socket.on('disconnect', () => {
+        console.log('🔴 Usuario desconectado')
+    })
+    
+})

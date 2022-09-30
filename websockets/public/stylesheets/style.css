@@ -33,6 +33,7 @@ h1 {
   background-color: #DE4E53;
   border-color: #DE4E53;
   width: 50%;
+  margin-bottom: 3%;
 }
 
 .submitButton:active {
