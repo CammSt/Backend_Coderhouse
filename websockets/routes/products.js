@@ -5,14 +5,28 @@ const ProductsContainer = require('../components/ProductsContainer');
 const product = new ProductsContainer()
 
 router.get('/', ( request , response ) => {
-    response.render('index', {title: 'Productos'});
+    let data = product.getProducts()
+    response.render('index', {isEmpty: !data.length, products: data, title: 'Productos'});
 });
 
 router.get('/productos', ( request , response ) => {
     let data = product.getProducts()
-    response.render( 'products', { isEmpty: !data.length, products: data, title: 'Productos'});
+    response.render( 'index', { isEmpty: !data.length, products: data, title: 'Productos'});
 });
 
+router.post('/productos', ( request , response ) => {
+    
+    let { title, price, thumbnail } = request.body;
+    const newProduct = { title, price, thumbnail };
+    
+    product.addProduct(newProduct)
+    let data = product.getProducts()
+    response.render('index', {isEmpty: !data.length, products: data, title: 'Productos'});
+});
+
+
+
+/* 
 router.get('/productos/:id', ( request , response ) => {
 
     let searchedProduct = product.findProduct(Number(request.params.id))
@@ -23,17 +37,6 @@ router.get('/productos/:id', ( request , response ) => {
         response.status(404).send({ error: 'Producto no encontrado' });
     }
 });
-
-router.post('/productos', ( request , response ) => {
-
-    let { title, price, thumbnail } = request.body;
-
-    const newProduct = { title, price, thumbnail };
-
-    product.addProduct(newProduct)
-    response.redirect('/productos')
-});
-
 
 router.put('/productos/:id', ( request , response ) => {
     let id = Number(request.params.id)
@@ -63,6 +66,6 @@ router.delete('/productos/:id', ( request , response ) => {
     } else {
         response.status(404).send({ error: 'Producto no encontrado' });
     }
-}) 
+})  */
 
 module.exports = router;
