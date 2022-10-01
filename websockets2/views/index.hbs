@@ -1,0 +1,76 @@
+
+<h1><i>Agregue un producto</i></h1>
+
+<form class="formContainer" action="/productos" method="post">
+	<div class="form-group formItem">
+		<label for="title" class="formLabel">Nombre</label>
+		<input type="text" class="form-control" name="title" aria-describedby="emailHelp" placeholder="Nombre" required>
+	</div>
+
+	<div class="form-group formItem">
+		<label for="price" class="formLabel">Precio</label>
+		<input type="number" class="form-control" name="price" placeholder="Precio" required>
+	</div>
+
+	<div class="form-group formItem">
+		<label for="thumbnail" class="formLabel">Foto URL</label>
+		<input type="text" class="form-control" name="thumbnail" placeholder="Foto URL" required>
+	</div>
+	<button type="submit" class="btn btn-primary submitButton">Agregar</button>
+</form>
+
+<h1><i>Vista de productos</i></h1>
+
+{{#if isEmpty }}
+	<p>No hay Productos</p>
+{{else}}
+	<table class="table table-sm table-hover">
+		<thead>
+			<tr>
+				<th scope="col">#ID</th>
+				<th scope="col">Nombre</th>
+				<th scope="col">Precio</th>
+				<th scope="col">Imagen</th>
+			</tr>
+		</thead>
+		<tbody>
+			{{#each products}}
+				<tr>
+					<th scope="row">{{this.id}}</th>
+					<td> <img src={{this.thumbnail}} class='tableImage'></td>
+					<td>{{this.title}}</td>
+					<td>$ {{this.price}}</td>
+				</tr>
+			{{/each}}
+		</tbody>
+	</table>
+	
+{{/if}}
+
+<div class="messagesContainer">
+	<h1><i>Centro de Mensajes</i></h1>
+
+	<form id="form-message">
+		<div class="inputsFormContainer">
+			<div class="messageFormInput">
+				<label for="input-user" class="formLabel">Usuario</label>
+				<input type="text" name="input-user" id="input-user" placeholder="Usuario">
+			</div>
+			<div class="messageFormInput">
+				<label for="input-message" class="formLabel">Mensaje</label>
+				<input type="text" name="input-message" id="input-message" placeholder="Escriba su mensaje...">
+			</div>
+		</div>
+		<button type="submit" class="btn btn-primary sendMessageButton">Enviar</button>
+	</form>
+
+	<h1><i>Historial de mensajes</i></h1>
+
+	<ul id="show-message"></ul>
+</div>
+
+
+<script src="socket.io/socket.io.min.js"></script>
+<script src="javascripts/scripts.js"> </script> 
+
+

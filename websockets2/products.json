@@ -1,0 +1,26 @@
+[
+  {
+    "title": "Escuadra",
+    "price": 80,
+    "thumbnail": "https://cdn2.iconfinder.com/data/icons/color-back-to-school/64/squad-256.png",
+    "id": 1
+  },
+  {
+    "title": "Calculadora",
+    "price": 1000,
+    "thumbnail": "https://cdn3.iconfinder.com/data/icons/education-209/64/calculator-math-tool-school-128.png",
+    "id": 2
+  },
+  {
+    "title": "Lapiz",
+    "price": 100,
+    "thumbnail": "https://cdn3.iconfinder.com/data/icons/education-209/64/pencil-pen-stationery-school-128.png",
+    "id": 3
+  },
+  {
+    "title": "Goma de borrar",
+    "price": 10000,
+    "thumbnail": "https://cdn0.iconfinder.com/data/icons/seo-web-4-1/128/Vigor_Erase-Eraser-Clean-Remove-128.png",
+    "id": 4
+  }
+]

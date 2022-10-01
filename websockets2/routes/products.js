@@ -2,7 +2,7 @@
 const router = require('express').Router();
 
 const ProductsContainer = require('../components/ProductsContainer');
-const product = new ProductsContainer()
+const product = new ProductsContainer('products.json')
 
 router.get('/', ( request , response ) => {
     let data = product.getProducts()
