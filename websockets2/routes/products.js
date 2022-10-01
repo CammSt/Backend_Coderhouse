@@ -4,24 +4,44 @@ const router = require('express').Router();
 const ProductsContainer = require('../components/ProductsContainer');
 const product = new ProductsContainer('products.json')
 
-router.get('/', ( request , response ) => {
-    let data = product.getProducts()
-    response.render('index', {isEmpty: !data.length, products: data, title: 'Productos'});
+const ChatContainer = require('../components/ChatContainer');
+const message = new ChatContainer('chat.json')
+
+router.get('/', async ( request , response ) => {
+    let data = await product.getProducts()
+    let messages = await message.getAll()
+    response.render('index', { isEmptyProducts: !data.length, products: data, messages: messages ,title: 'Productos' });
 });
 
-router.get('/productos', ( request , response ) => {
-    let data = product.getProducts()
-    response.render( 'index', { isEmpty: !data.length, products: data, title: 'Productos'});
+router.get('/productos', async ( request , response ) => {
+    let data = await product.getProducts()
+    let messages = await message.getAll()
+    response.render('index', { isEmptyProducts: !data.length, products: data, messages: messages ,title: 'Productos' });
 });
 
-router.post('/productos', ( request , response ) => {
+router.post('/productos', async ( request , response ) => {
     
     let { title, price, thumbnail } = request.body;
     const newProduct = { title, price, thumbnail };
     
     product.addProduct(newProduct)
-    let data = product.getProducts()
-    response.render('index', {isEmpty: !data.length, products: data, title: 'Productos'});
+    let data = await product.getProducts()
+    let messages = await message.getAll()
+
+    response.render('index', { isEmptyProducts: !data.length, products: data, messages: messages ,title: 'Productos' });
+});
+
+router.post('/message', async ( request , response ) => {
+    
+    let { user, message, date, time } = request.body;
+    const newMessage = { user, message, date, time };
+    
+    message.addMessage(newMessage)
+    
+    let data = await product.getProducts()
+    let messages = await message.getAll()
+
+    response.render('index', { isEmptyProducts: !data.length, products: data, messages: messages ,title: 'Productos' });
 });
 
 

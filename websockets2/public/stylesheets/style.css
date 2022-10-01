@@ -80,3 +80,36 @@ h1 {
   width: 10%;
   margin-bottom: 3%;
 }
+
+
+.messageContainer {
+  margin-bottom: 2%;
+}
+.messageFirstRow {
+  display: flex;
+  width: 30%;
+  justify-content: space-between;
+  margin-bottom: 1%;
+}
+.dateContainer {
+  display: flex;
+  width: 33%;
+  justify-content: space-between;
+}
+
+.messageUser {
+  color:  #DE4E53;
+  text-decoration: underline;
+  font-size: 1.5vw;
+  font-style: italic;
+}
+.messageText {
+  display: flex;
+  width: 30%;
+  margin-left: 3%;
+
+}
+.messageDate {
+  font-style: oblique ;
+  
+}

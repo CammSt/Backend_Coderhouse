@@ -1,5 +1,4 @@
 const fs = require("fs");
-const { parse } = require("path");
 
 class ProductsContainer {
 
@@ -9,7 +8,7 @@ class ProductsContainer {
         this.readFileOrCreateOne()
     }
 
-    getProducts() {
+    async getProducts() {
         return this.products
     }
 

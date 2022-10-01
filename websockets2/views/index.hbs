@@ -21,7 +21,7 @@
 
 <h1><i>Vista de productos</i></h1>
 
-{{#if isEmpty }}
+{{#if isEmptyProducts }}
 	<p>No hay Productos</p>
 {{else}}
 	<table class="table table-sm table-hover">
@@ -50,15 +50,15 @@
 <div class="messagesContainer">
 	<h1><i>Centro de Mensajes</i></h1>
 
-	<form id="form-message">
+	<form id="form-message" action="/message" method="post">
 		<div class="inputsFormContainer">
 			<div class="messageFormInput">
 				<label for="input-user" class="formLabel">Usuario</label>
-				<input type="text" name="input-user" id="input-user" placeholder="Usuario">
+				<input type="text" name="input-user" id="input-user" placeholder="Usuario" required>
 			</div>
 			<div class="messageFormInput">
 				<label for="input-message" class="formLabel">Mensaje</label>
-				<input type="text" name="input-message" id="input-message" placeholder="Escriba su mensaje...">
+				<input type="text" name="input-message" id="input-message" placeholder="Escriba su mensaje..." required>
 			</div>
 		</div>
 		<button type="submit" class="btn btn-primary sendMessageButton">Enviar</button>
@@ -66,7 +66,25 @@
 
 	<h1><i>Historial de mensajes</i></h1>
 
-	<ul id="show-message"></ul>
+	<ul id="show-message">
+
+		{{#each messages}}
+			<li>
+				<div class='messageContainer'>
+					<div class='messageFirstRow'> 
+						<div class='messageUser'>{{this.user}}</div>
+
+						<div class='dateContainer'>
+							<div class='messageDate'>{{this.date}}</div>
+							<div class='messageDate'>{{this.time}}</div>
+						</div>
+					</div>
+					<div class='messageText'>{{this.message}}</div>
+				</div>
+			</li>
+		{{/each}}
+	</ul>
+
 </div>
 
 
