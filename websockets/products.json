@@ -22,5 +22,11 @@
     "price": 10000,
     "thumbnail": "https://cdn0.iconfinder.com/data/icons/seo-web-4-1/128/Vigor_Erase-Eraser-Clean-Remove-128.png",
     "id": 4
+  },
+  {
+    "title": "Saca puntas",
+    "price": 300,
+    "thumbnail": "https://cdn0.iconfinder.com/data/icons/education-126/128/24-256.png",
+    "id": 5
   }
 ]
