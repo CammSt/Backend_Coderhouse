@@ -4,19 +4,14 @@ const router = require('express').Router();
 const ProductsContainer = require('../components/ProductsContainer');
 const product = new ProductsContainer('products.json')
 
-const ChatContainer = require('../components/ChatContainer');
-const message = new ChatContainer('chat.json')
-
 router.get('/', async ( request , response ) => {
     let data = await product.getProducts()
-    let messages = await message.getAll()
-    response.render('index', { isEmptyProducts: !data.length, products: data, messages: messages ,title: 'Productos' });
+    response.render('index', { isEmptyProducts: !data.length, products: data ,title: 'Productos' });
 });
 
 router.get('/productos', async ( request , response ) => {
     let data = await product.getProducts()
-    let messages = await message.getAll()
-    response.render('index', { isEmptyProducts: !data.length, products: data, messages: messages ,title: 'Productos' });
+    response.render('index', { isEmptyProducts: !data.length, products: data ,title: 'Productos' });
 });
 
 router.post('/productos', async ( request , response ) => {
@@ -26,24 +21,8 @@ router.post('/productos', async ( request , response ) => {
     
     product.addProduct(newProduct)
     let data = await product.getProducts()
-    let messages = await message.getAll()
-
-    response.render('index', { isEmptyProducts: !data.length, products: data, messages: messages ,title: 'Productos' });
+    response.render('index', { isEmptyProducts: !data.length, products: data ,title: 'Productos' });
 });
-
-router.post('/message', async ( request , response ) => {
-    
-    let { user, message, date, time } = request.body;
-    const newMessage = { user, message, date, time };
-    
-    message.addMessage(newMessage)
-    
-    let data = await product.getProducts()
-    let messages = await message.getAll()
-
-    response.render('index', { isEmptyProducts: !data.length, products: data, messages: messages ,title: 'Productos' });
-});
-
 
 
 /* 

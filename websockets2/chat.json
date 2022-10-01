@@ -1,44 +1,58 @@
 [
-    {
-        "user":"esteban@gmail.com",
-        "message":"¡Hola! ¿Cómo están?",
-        "date":"3/26/2022",
-        "time":"12:39:02",
-        "id":1
-    },
-    {
-        "user":"maria@gmail.com",
-        "message":"Muy bien, y vos? Qué estás haciendo?",
-        "date":"3/26/2022",
-        "time": "12:39:17",
-        "id":2
-    },
-    {
-        "user":"esteban@gmail.com",
-        "message":"Estaba revisando esta API",
-        "date":"3/26/2022",
-        "time": "12:39:31",
-        "id":3
-    },
-    {
-        "user":"maria@gmail.com",
-        "message":"Genial, yo también!",
-        "date":"3/26/2022",
-        "time": "12:39:39",
-        "id":4
-    },
-    {
-        "user":"maria@gmail.com",
-        "message":"Avisame si necesitas ayuda con algo! :)",
-        "date":"3/26/2022",
-        "time": "12:39:49",
-        "id":5
-    },
-    {
-        "user":"esteban@gmail.com",
-        "message":"Dale, cualquier cosa te aviso!",
-        "date":"3/26/2022",
-        "time": "12:40:00",
-        "id":6
-    }
+  {
+    "user": "juli@gmail.com",
+    "message": "Hola",
+    "date": "3/26/2022",
+    "time": "12:39:02",
+    "id": 1
+  },
+  {
+    "user": "maria@gmail.com",
+    "message": "Hola",
+    "date": "3/26/2022",
+    "time": "12:39:17",
+    "id": 2
+  },
+  {
+    "user": "juli@gmail.com",
+    "message": "A ver si funciona",
+    "date": "3/26/2022",
+    "time": "12:39:31",
+    "id": 3
+  },
+  {
+    "user": "juliana@gmail.com",
+    "message": "Creo que no",
+    "date": "3/26/2022",
+    "time": "12:39:39",
+    "id": 4
+  },
+  {
+    "user": "camila",
+    "message": "hola",
+    "date": "6/9/2022",
+    "time": "18:34:30",
+    "id": 6
+  },
+  {
+    "user": "camila",
+    "message": "hola",
+    "date": "6/9/2022",
+    "time": "18:34:30",
+    "id": 6
+  },
+  {
+    "user": "nicolas",
+    "message": "probando",
+    "date": "6/9/2022",
+    "time": "18:40:19",
+    "id": 8
+  },
+  {
+    "user": "nicolas",
+    "message": "probando",
+    "date": "6/9/2022",
+    "time": "18:40:19",
+    "id": 8
+  }
 ]

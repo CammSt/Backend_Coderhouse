@@ -62,14 +62,11 @@
 	});
 
 	socket.on('inicio', (data) => {
-		mensajes = data;
-		updateMessages(mensajes);
+		updateMessages(data);
 	});
 
 	socket.on('notificacion', (data) => {
-		console.log("entro a socket.on notification");
-		mensajes.push(data);
-		updateMessages(mensajes);
+		updateMessages(data);
 	});
     
 })();

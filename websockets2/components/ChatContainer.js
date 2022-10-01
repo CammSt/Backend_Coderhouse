@@ -1,6 +1,5 @@
 const fs = require("fs");
 
-
 class ChatContainer {
 
     constructor(fileName) {
@@ -14,9 +13,9 @@ class ChatContainer {
     }
 
     addMessage(message) {
-        product.id = this.messages.length + 1;
+        message.id = this.messages.length + 1;
         this.messages.push(message)
-        message.price = Number(message.price)
+
         this.save(message)
     }
 
@@ -24,10 +23,7 @@ class ChatContainer {
 
     async readFileOrCreateOne() {
         try {
-          await fs.promises.readFile(this.filename, "utf-8");
-          this.messages = JSON.parse(await this.getAll()) 
-
-          console.log("messages ", this.messages);
+            this.messages = JSON.parse(await fs.promises.readFile(this.filename, "utf-8"))
 
         } catch (error) {
             console.log("error ", error);
@@ -51,15 +47,13 @@ class ChatContainer {
     }
 
     async getAll() {
-        const data = await fs.promises.readFile(this.filename, "utf-8");
-        return data;
+        return this.messages;
     }
 
     async save(message) {
 
         try {
             const data = await this.getAll();
-
             if( data.length === 0) {
 
                 const parsedData = [];
@@ -67,12 +61,11 @@ class ChatContainer {
                 parsedData.push(message)
 
                 await fs.promises.writeFile(this.filename, JSON.stringify(parsedData,null,2));
-
                 return message.id;
 
             } else { 
 
-                const parsedData = JSON.parse(data);
+                const parsedData = data;
 
                 message.id = parsedData.length + 1;
                 parsedData.push(message);
@@ -80,7 +73,6 @@ class ChatContainer {
                 await fs.promises.writeFile(this.filename, JSON.stringify(parsedData,null,2));
                 return message.id;
             }
-
 
         } catch (error) {
             console.log(`Error Code: ${error.code} | There was an error trying to save the message`);
