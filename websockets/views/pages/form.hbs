@@ -1,0 +1,76 @@
+<h1><i>Agregue un producto</i></h1>
+
+<div class="row g-3">
+
+    <form id="form-product" action="/productos" method="POST">
+        <div class="form-group formItem">
+            <label for="title" class="formLabel">Nombre</label>
+            <input type="text" id="input-title" class="form-control" name="title" placeholder="Nombre" required>
+        </div>
+
+        <div class="form-group formItem">
+            <label for="price" class="formLabel">Precio</label>
+            <input type="number" id="input-price" class="form-control" name="price" placeholder="Precio" required>
+        </div>
+
+        <div class="form-group formItem">
+            <label for="thumbnail" class="formLabel">Foto URL</label>
+            <input type="text" id="input-image" class="form-control" name="thumbnail" placeholder="Foto URL" required>
+        </div>
+        <button type="submit" class="btn btn-primary submitButton" id="btn-addProduct">Agregar a la lista</button>
+    </form>
+
+    <hr>
+
+    <h1><i>Vista de productos</i></h1>
+
+    {{#if isEmptyProducts }}
+        <p>No hay Productos</p>
+    {{else}}
+        <table class="table table-sm table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">#ID</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Precio</th>
+                    <th scope="col">Imagen</th>
+                </tr>
+            </thead>
+            <tbody  id="productsTableBody">
+                {{#each products}}
+                    <tr>
+                        <th scope="row">{{this.id}}</th>
+                        <td> <img src={{this.thumbnail}} class='tableImage'></td>
+                        <td>{{this.title}}</td>
+                        <td>$ {{this.price}}</td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    {{/if}}
+
+    <hr>
+    <h1><i>Centro de Mensajes</i></h1>
+
+    <form id="form-message" action="/productos" method="POST">
+		<div class="inputsFormContainer">
+			<div class="messageFormInput">
+				<label for="input-email" class="formLabel">Email</label>
+				<input type="text" name="input-email" id="input-email" placeholder="Email" required>
+			</div>
+			<div class="messageFormInput">
+				<label for="input-message" class="formLabel">Mensaje</label>
+				<input type="text" name="input-message" id="input-message" placeholder="Escriba su mensaje..." required>
+			</div>
+		</div>
+		<button type="submit" class="btn btn-primary sendMessageButton" id="btn-sendMessage">Enviar</button>
+	</form>
+
+    <h1><i>Historial de mensajes</i></h1>
+    
+    <div id="chatHistory"></div>
+
+</div>
+
+<script src="socket.io/socket.io.min.js"></script>
+<script src="javascripts/scripts.js"> </script> 

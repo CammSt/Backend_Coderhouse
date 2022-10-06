@@ -1,72 +1,143 @@
 
 (function () {
 
-	const formMessage = document.getElementById('form-message');
-	const inputMessage = document.getElementById('input-message');
-	const inputUser = document.getElementById('input-user');
-	const showMessage = document.getElementById('show-message');
-
 	const socket = io();
 
-	socket.emit('inicio')
-
+	const formMessage = document.getElementById('form-message');
 	
-	formMessage.addEventListener('submit', (event) => {
+	const inputMessage = document.getElementById('input-message');
+	const inputEmail = document.getElementById('input-email');
+	const chatHistory = document.getElementById('chatHistory')
 
-		event.preventDefault();
+	const formProduct = document.getElementById('form-product');
+	
+    const inputTitle = document.getElementById('input-title');
+	const inputPrice = document.getElementById('input-price');
+	const inputImage = document.getElementById('input-image');
 
-		let todayDate = new Date()
-		let today = todayDate.getDay() + '/' + todayDate.getMonth() + '/' + todayDate.getFullYear()
-		let time = todayDate.getHours() + ':' + todayDate.getMinutes() + ':' + todayDate.getSeconds()
 
-		let messageData = {
-			user: inputUser.value,
-			message : inputMessage.value,
-			date : today,
-			time: time
+	formMessage.addEventListener('submit', (evt) => {
+		evt.preventDefault();
+
+		const email = inputEmail.value;
+		const message = inputMessage.value;
+		
+		if (email !== '' && message !== '') {
+
+			let date_time = new Date().toLocaleString()
+			let date_time_split = date_time.split(", ")
+		
+			socket.emit('newMessage', {
+				"email" : email,
+				"message" : message,
+				"date" : date_time_split[0],
+				"time": date_time_split[1]
+			})
 		}
-
-		socket.emit('nuevo-mensaje', messageData);
-		inputMessage.value = '';
-		inputMessage.focus();
 	})
 	
-	function updateMessages(messages = []) {
-		showMessage.innerText = '';
+	formProduct.addEventListener('submit', (evt) => {
+		evt.preventDefault();
 
-		messages.forEach((data) => {
+		const title = inputTitle.value;
+		const price = inputPrice.value;
+		const image = inputImage.value;
+		
+		if (title !== '' && price !== '' && image !== '') {
+
+			socket.emit('newProduct',{
+				"title": title,
+				"price": parseInt(price),
+				"thumbnail": image
+			})
+		}
+	})
+
+	socket.on('firstLoadProducts', (data) => {
+
+		productsTableBody.innerText = '';
+
+		data.forEach((product) => {
+
+			const item = document.createElement('tr')
+
+			item.innerHTML = `
+				<th scope="row">${product.id}</th>
+				<td> <img src=${product.thumbnail} class='tableImage'></td>
+				<td>${product.title}</td>
+				<td>$ ${product.price}</td>
+			`
+			productsTableBody.appendChild(item);
+		}) 
+	})
+
+	socket.on('firstLoadMessages', (data) => {
+		chatHistory.innerText = '';
+
+		data.forEach((message) => {
 
 			const item = document.createElement('li')
-
+	
 			item.innerHTML = `
 				<div class='messageContainer'>
 					<div class='messageFirstRow'> 
-						<div class='messageUser'>${data.user}</div>
-
+						<div class='messageUser'>${message.email}</div>
+	
 						<div class='dateContainer'>
-							<div class='messageDate'>${data.date}</div>
-							<div class='messageDate'>${data.time}</div>
+							<div class='messageDate'>${message.date}</div>
+							<div class='messageDate'>${message.time}</div>
 						</div>
 					</div>
-
-					<div class='messageText'>${data.message}</div>
+	
+					<div class='messageText'>${message.message}</div>
 					
 				</div>
 			`
-			showMessage.appendChild(item);
+			chatHistory.appendChild(item);
 		})
-	}
+	})
+	
+	socket.on('updateMessages', (data) => {
+		chatHistory.innerText = '';
 
-	socket.on('connect', () => {
-		console.log('Connected to server');
-	});
+		data.forEach((message) => {
 
-	socket.on('inicio', (data) => {
-		updateMessages(data);
-	});
+			const item = document.createElement('li')
+	
+			item.innerHTML = `
+				<div class='messageContainer'>
+					<div class='messageFirstRow'> 
+						<div class='messageUser'>${message.email}</div>
+	
+						<div class='dateContainer'>
+							<div class='messageDate'>${message.date}</div>
+							<div class='messageDate'>${message.time}</div>
+						</div>
+					</div>
+	
+					<div class='messageText'>${message.message}</div>
+					
+				</div>
+			`
+			chatHistory.appendChild(item);
+		})
+	})
+	
+	socket.on('updateProducts', (data) => {
 
-	socket.on('notificacion', (data) => {
-		updateMessages(data);
-	});
-    
+		productsTableBody.innerText = '';
+
+		data.forEach((product) => {
+
+			const item = document.createElement('tr')
+
+			item.innerHTML = `
+				<th scope="row">${product.id}</th>
+				<td> <img src=${product.thumbnail} class='tableImage'></td>
+				<td>${product.title}</td>
+				<td>$ ${product.price}</td>
+			`
+			productsTableBody.appendChild(item);
+		}) 
+	})
 })();

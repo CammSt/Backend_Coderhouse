@@ -5,24 +5,25 @@ const ProductsContainer = require('../components/ProductsContainer');
 const product = new ProductsContainer('products.json')
 
 router.get('/', async ( request , response ) => {
-    let data = await product.getProducts()
-    response.render('index', { isEmptyProducts: !data.length, products: data ,title: 'Productos' });
+    // let data = await product.getProducts()
+    // response.render('pages/form', {isEmptyProducts: !data.length, products: data ,title: 'Productos' })
 });
 
-router.get('/productos', async ( request , response ) => {
+/* router.get('/productos', async ( request , response ) => {
     let data = await product.getProducts()
-    response.render('index', { isEmptyProducts: !data.length, products: data ,title: 'Productos' });
-});
+    response.render('pages/list', { isEmptyProducts: !data.length, products: data ,title: 'Productos' });
+});*/
 
-router.post('/productos', async ( request , response ) => {
+/* router.post('/productos', async ( request , response ) => {
+
+    console.log("request.body ",request.body);
     
-    let { title, price, thumbnail } = request.body;
+    /* let { title, price, thumbnail } = request.body;
     const newProduct = { title, price, thumbnail };
-    
     product.addProduct(newProduct)
-    let data = await product.getProducts()
-    response.render('index', { isEmptyProducts: !data.length, products: data ,title: 'Productos' });
-});
+
+    response.redirect('/');
+}); */
 
 
 /* 

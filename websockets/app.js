@@ -1,32 +1,29 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const express = require('express');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
 
+const app = express();
+
+const { engine } = require('express-handlebars');
 const productos = require('./routes/products')
 
-const app = express()
-
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname,'public')));
-
-app.use(logger('dev'));
+app.use('/', productos)
 app.use(cookieParser());
+app.use(logger('dev'));
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
+
+app.use(express.json());
+app.use(express.urlencoded({extended:true}));
+app.use(express.static('public'));
+
+app.set('views', './views');
 app.set('view engine', 'hbs');
 
-app.use('/', productos)
+app.engine('hbs', engine({
+    extname: '.hbs',
+    defaultLayout: 'index.hbs',
+    layoutsDir: __dirname + '/views/layouts',
+    partialsDir: __dirname + '/views/partials'
+}))
 
-// error handler
-app.use(function (err, req, res, next) {
-  console.error(err.stack)
-  res.status(500).send('Something broke!')
-})
-
-
-
-module.exports = app;
+module.exports = app
