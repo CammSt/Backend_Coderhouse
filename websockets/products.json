@@ -28,5 +28,11 @@
     "price": 300,
     "thumbnail": "https://cdn0.iconfinder.com/data/icons/education-126/128/24-256.png",
     "id": 5
+  },
+  {
+    "title": "papel",
+    "price": 90,
+    "thumbnail": "https://cdn3.iconfinder.com/data/icons/education-209/64/paper-clip-academic-note-exam-256.png",
+    "id": 6
   }
 ]

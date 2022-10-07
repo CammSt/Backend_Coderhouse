@@ -50,8 +50,12 @@ class ProductsContainer {
 
     async readFileOrCreateOne() {
         try {
-          await fs.promises.readFile(this.filename, "utf-8");
-          this.products = JSON.parse(await this.getData()) 
+            await fs.promises.readFile(this.filename, "utf-8");
+            let readData = await this.getData()
+            
+            if(readData.length != 0){
+                this.products = JSON.parse(readData) 
+            }
 
         } catch (error) {
             console.log("error ", error);
@@ -186,7 +190,8 @@ class ProductsContainer {
     
     async getAll() {
         const data = await this.getData();
-        return JSON.parse(data);
+        if(data.length != 0) return JSON.parse(data)
+        else return []
     }
 }
 

@@ -1,5 +1,5 @@
 
-(function () {
+( function () {
 
 	const socket = io();
 
@@ -14,7 +14,6 @@
     const inputTitle = document.getElementById('input-title');
 	const inputPrice = document.getElementById('input-price');
 	const inputImage = document.getElementById('input-image');
-
 
 	formMessage.addEventListener('submit', (evt) => {
 		evt.preventDefault();
@@ -42,9 +41,8 @@
 		const title = inputTitle.value;
 		const price = inputPrice.value;
 		const image = inputImage.value;
-		
-		if (title !== '' && price !== '' && image !== '') {
 
+		if (title !== '' && price !== '' && image !== '') {
 			socket.emit('newProduct',{
 				"title": title,
 				"price": parseInt(price),
@@ -53,11 +51,13 @@
 		}
 	})
 
-	socket.on('firstLoadProducts', (data) => {
-
+	/* socket.on('firstLoadProducts', (data) => {
+		let productsTableBody = document.getElementById("productsTableBody")
 		productsTableBody.innerText = '';
 
-		data.forEach((product) => {
+		let auxdata = JSON.parse(data)
+
+		auxdata.forEach((product) => {
 
 			const item = document.createElement('tr')
 
@@ -69,7 +69,21 @@
 			`
 			productsTableBody.appendChild(item);
 		}) 
-	})
+	}) */
+
+	/* socket.on("firstLoadProducts", (products) => {
+        fetch("/javascripts/templates/form.hbs")
+            .then(template => template.text())
+            .then(text => {
+				let productsTableBody = document.getElementById("productsTableBody")
+                const template = Handlebars.compile(text)
+                products.forEach(el => {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = template(el)
+                    productsTableBody.appendChild(tr)
+                })      
+            })
+    }) */
 
 	socket.on('firstLoadMessages', (data) => {
 		chatHistory.innerText = '';
@@ -124,10 +138,12 @@
 	})
 	
 	socket.on('updateProducts', (data) => {
-
+		let productsTableBody = document.getElementById("productsTableBody")
 		productsTableBody.innerText = '';
 
-		data.forEach((product) => {
+		let auxdata = JSON.parse(data)
+
+		auxdata.forEach((product) => {
 
 			const item = document.createElement('tr')
 
