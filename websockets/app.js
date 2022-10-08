@@ -1,28 +1,27 @@
-const express = require('express');
-const cookieParser = require('cookie-parser');
-const logger = require('morgan');
-
+const express = require("express");
+const Server = require("./components/Socket");
+const http = require("http")
+const bodyParser = require('body-parser');
+const path = require("path");
 const app = express();
 
-const { engine } = require('express-handlebars');
-const productos = require('./routes/products')
+const PORT = process.env.PORT
 
-app.use('/', productos)
-app.use(cookieParser());
-app.use(logger('dev'));
-
-app.use(express.json());
-app.use(express.urlencoded({extended:true}));
+app.use(express.json())
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.static('public'));
 
-app.set('views', './views');
-app.set('view engine', 'hbs');
+app.use((error, req, res, next) => {
+  if(error.statusCode){
+    return res.status(error.statusCode).send(`Error ${error.statusCode}`)
+  }
+  console.log(error)
+  res.status(500).json({error: "Something broke..."})
+})
 
-app.engine('hbs', engine({
-    extname: '.hbs',
-    defaultLayout: 'index.hbs',
-    layoutsDir: __dirname + '/views/layouts',
-    partialsDir: __dirname + '/views/partials'
-}))
+const server = http.createServer(app)
+Server.init(server)
 
-module.exports = app
+server.listen(PORT, function() {
+  console.log(` >>>>> 🚀 Server started at http://localhost:${PORT}   <<<<<`)
+})

@@ -3,157 +3,84 @@
 
 	const socket = io();
 
+	// Mensajes
 	const formMessage = document.getElementById('form-message');
-	
 	const inputMessage = document.getElementById('input-message');
 	const inputEmail = document.getElementById('input-email');
-	const chatHistory = document.getElementById('chatHistory')
+	const messageOutput = document.getElementById('chatHistory')
 
+
+	// Productos
 	const formProduct = document.getElementById('form-product');
-	
     const inputTitle = document.getElementById('input-title');
 	const inputPrice = document.getElementById('input-price');
 	const inputImage = document.getElementById('input-image');
+	const tableBody = document.getElementById("productsTableBody")
 
-	formMessage.addEventListener('submit', (evt) => {
-		evt.preventDefault();
-
-		const email = inputEmail.value;
-		const message = inputMessage.value;
+	formMessage.addEventListener("submit", (e) => {
+        e.preventDefault();
 		
-		if (email !== '' && message !== '') {
+		let date_time = new Date().toLocaleString()
+		let date_time_split = date_time.split(", ")
 
-			let date_time = new Date().toLocaleString()
-			let date_time_split = date_time.split(", ")
-		
-			socket.emit('newMessage', {
-				"email" : email,
-				"message" : message,
-				"date" : date_time_split[0],
-				"time": date_time_split[1]
-			})
-		}
-	})
-	
-	formProduct.addEventListener('submit', (evt) => {
-		evt.preventDefault();
-
-		const title = inputTitle.value;
-		const price = inputPrice.value;
-		const image = inputImage.value;
-
-		if (title !== '' && price !== '' && image !== '') {
-			socket.emit('newProduct',{
-				"title": title,
-				"price": parseInt(price),
-				"thumbnail": image
-			})
-		}
+        socket.emit("newMessage", { "email" : inputEmail.value,
+									"message" : inputMessage.value,
+									"date" : date_time_split[0],
+									"time": date_time_split[1] })
 	})
 
-	/* socket.on('firstLoadProducts', (data) => {
-		let productsTableBody = document.getElementById("productsTableBody")
-		productsTableBody.innerText = '';
+	formProduct.addEventListener('submit', (e) => {
+        e.preventDefault();
+        socket.emit("newProduct", { "title": inputTitle.value,
+									"price": parseInt(inputPrice.value),
+									"thumbnail": inputImage.value })
+    })
+    
 
-		let auxdata = JSON.parse(data)
-
-		auxdata.forEach((product) => {
-
-			const item = document.createElement('tr')
-
-			item.innerHTML = `
-				<th scope="row">${product.id}</th>
-				<td> <img src=${product.thumbnail} class='tableImage'></td>
-				<td>${product.title}</td>
-				<td>$ ${product.price}</td>
-			`
-			productsTableBody.appendChild(item);
-		}) 
-	}) */
-
-	/* socket.on("firstLoadProducts", (products) => {
-        fetch("/javascripts/templates/form.hbs")
-            .then(template => template.text())
-            .then(text => {
-				let productsTableBody = document.getElementById("productsTableBody")
+	socket.on("firstLoadProducts", (products) => {
+        fetch("javascripts/templates/product.hbs")
+            .then( template => template.text() )
+            .then( text => {
                 const template = Handlebars.compile(text)
                 products.forEach(el => {
                     const tr = document.createElement("tr");
                     tr.innerHTML = template(el)
-                    productsTableBody.appendChild(tr)
+                    tableBody.appendChild(tr)
                 })      
             })
-    }) */
+    })
 
-	socket.on('firstLoadMessages', (data) => {
-		chatHistory.innerText = '';
+	socket.on("updateProducts", (data) => {
+        fetch("javascripts/templates/product.hbs")
+            .then( template => template.text() )
+            .then( text => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = Handlebars.compile(text)(data)
+                tableBody.appendChild(tr)
+            })
+    })
 
-		data.forEach((message) => {
+	socket.on("firstLoadMessages", (messages) => {
+        fetch("javascripts/templates/message.hbs")
+            .then( template => template.text() )
+            .then( text => {
+                const template = Handlebars.compile(text)
+                messages.forEach(el => {
+                    const li = document.createElement("li");
+                    li.innerHTML = template(el)
+                    messageOutput.appendChild(li)
+                })      
+            })
+    })
 
-			const item = document.createElement('li')
-	
-			item.innerHTML = `
-				<div class='messageContainer'>
-					<div class='messageFirstRow'> 
-						<div class='messageUser'>${message.email}</div>
-	
-						<div class='dateContainer'>
-							<div class='messageDate'>${message.date}</div>
-							<div class='messageDate'>${message.time}</div>
-						</div>
-					</div>
-	
-					<div class='messageText'>${message.message}</div>
-					
-				</div>
-			`
-			chatHistory.appendChild(item);
-		})
-	})
-	
-	socket.on('updateMessages', (data) => {
-		chatHistory.innerText = '';
+	socket.on("updateMessages", (data) => {
+        fetch("javascripts/templates/message.hbs")
+            .then( template => template.text() )
+            .then( text => {
+                const li = document.createElement("li");
+                li.innerHTML = Handlebars.compile(text)(data)
+                messageOutput.appendChild(li)
+            })
+    })
 
-		data.forEach((message) => {
-
-			const item = document.createElement('li')
-	
-			item.innerHTML = `
-				<div class='messageContainer'>
-					<div class='messageFirstRow'> 
-						<div class='messageUser'>${message.email}</div>
-	
-						<div class='dateContainer'>
-							<div class='messageDate'>${message.date}</div>
-							<div class='messageDate'>${message.time}</div>
-						</div>
-					</div>
-	
-					<div class='messageText'>${message.message}</div>
-					
-				</div>
-			`
-			chatHistory.appendChild(item);
-		})
-	})
-	
-	socket.on('updateProducts', (data) => {
-		let productsTableBody = document.getElementById("productsTableBody")
-		productsTableBody.innerText = '';
-
-		let auxdata = JSON.parse(data)
-
-		auxdata.forEach((product) => {
-
-			const item = document.createElement('tr')
-
-			item.innerHTML = `
-				<th scope="row">${product.id}</th>
-				<td> <img src=${product.thumbnail} class='tableImage'></td>
-				<td>${product.title}</td>
-				<td>$ ${product.price}</td>
-			`
-			productsTableBody.appendChild(item);
-		}) 
-	})
 })();

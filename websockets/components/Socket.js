@@ -12,13 +12,13 @@ class Socket {
 		io = new Server(httpServer)
 
 		io.on('connection', async (socket) => {
-
 			console.log("\n 🟢  Client connected\n");
+			
 			let products = await product.getAll()
 
-			/* if(products.length != 0) {
+			if(products.length != 0) {
 				socket.emit('firstLoadProducts', products )
-			} */
+			}
 
 			const messages = await chat.getAll();
 			if(messages.length != 0) {
@@ -27,14 +27,12 @@ class Socket {
 
 			socket.on('newProduct', async(data) => {
 				await product.save(data);
-				const products = await product.getAll();
-				io.sockets.emit('updateProducts', products);
+				io.sockets.emit('updateProducts', data);
 			})
 
 			socket.on('newMessage', async(data) => {
 				await chat.save(data);
-				const messages = await chat.getAll();
-				io.sockets.emit('updateMessages', messages)
+				io.sockets.emit('updateMessages', data)
 			})
 
 			socket.on('disconnect', () => {

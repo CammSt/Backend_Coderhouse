@@ -57,9 +57,13 @@ h1 {
   height: 7vw;
 }
 
+#chatHistory {
+  list-style-type: none;
+}
 
 .messagesContainer {
   margin-top: 4%;
+  text-decoration: none;
 }
 
 .inputsFormContainer {
