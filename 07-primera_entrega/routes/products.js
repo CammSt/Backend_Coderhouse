@@ -28,7 +28,7 @@ router.post('/', ( request , response ) => {
     // Para incorporar productos al listado (disponible para administradores)
 
     const { body } = request
-    body.timestamp = new Date().toLocaleString()
+    body.timestamp = Date.now() /* new Date().toLocaleString() */
 
     let result = productsContainer.addProduct(body)
 
