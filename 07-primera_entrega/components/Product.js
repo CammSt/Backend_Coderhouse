@@ -21,6 +21,20 @@ class Product {
         this.precio = data.price
         this.stock = data.stock
     }
+
+    productData(){
+        let data = { 
+           id: this.id,
+           timestamp: this.timestamp,
+           nombre: this.nombre,
+           descripcion: this.descripcion,
+           codigo: this.codigo,
+           foto: this.foto,
+           precio: this.precio,
+           stock: this.stock
+        }
+        return data
+    }
 }
 
 module.exports = Product

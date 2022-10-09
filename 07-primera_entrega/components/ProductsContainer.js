@@ -10,42 +10,88 @@ class ProductsContainer {
     }
 
     async getProducts() {
+        //Returns all products
+
         return this.products
     }
 
     addProduct(product) {
+        //Adds a product to the products array and saves it in file -- returns undefined or product's id
+
         let id = this.products.length + 1
         let { timeStamp, name, description, code, image, price, stock } = product
 
         let newProduct = new Product(id, timeStamp, name, description, code, image, Number(price), stock)
         this.products.push(newProduct)
 
-        this.save(product)
-        return product.id
+        let result = this.saveInFile()
+        if( result === 1) {
+            //if saving in file fails the product gets deleted from the products' local list
+            this.deleteProduct(id)
+            return undefined
+        } else {
+            //if product is saved in file its id gets returned
+            return product.id
+        }
     }
 
     findProduct(id) {
+        //Finds product by id in products array -- returns product or undefined
+
         return this.products.find( producto => producto.id === id );
     }
 
     productExists(id){
+        //Returns boolean indicating if product id exists in products array  -- returns true or false
         return this.findProduct(id) != undefined
     }
 
     updateProduct(id, data) {
+        //Modify product searched by id in products array and saving it in file  -- returns undefined or product
 
         let searchedProduct = this.findProduct(id)
+
+        if( searchedProduct === undefined ) {
+            return undefined
+        }
+
+        const searchedProductCopy = structuredClone(searchedProduct);
+
         searchedProduct.updateProduct(data)
 
-        return this.products[index]
+        let result = this.saveInFile()
+        if( result === 1) {
+            //if saving in file fails the product returns to its original state
+            let oldData = searchedProductCopy.productData()
+            searchedProduct.updateProduct(oldData)
+            return undefined
+        } else {
+            //if product is saved in file it gets returned updated
+            return this.products[index]
+        }
     }
 
     deleteProduct(id) {
+        //Deletes product by id from products list and file
         let searchedProduct = this.findProduct(id)
+
+        if( searchedProduct === undefined ) {
+            return undefined
+        } 
+
         let index = this.products.indexOf(searchedProduct)
         this.products.splice(index,1)
-    }
 
+        let result = this.saveInFile()
+        if( result === 1) {
+            //if saving in file fails the product gets added back to products list
+            this.addProduct(searchedProduct)
+            return undefined
+        } else {
+            //if product is deleted the return is the product
+            return searchedProduct
+        }
+    }
 
 
     //// ------- FILE METHODS -------- /////
@@ -81,137 +127,13 @@ class ProductsContainer {
 
     async saveInFile() {
         try {
-            
-            let productList = this.products
-            await fs.promises.writeFile(this.filename, JSON.stringify(productList,null,2));
-
-            /* if( data.length === 0) {
-
-                const parsedData = [];
-                product.id = 1;
-                parsedData.push(product)
-
-                await fs.promises.writeFile(this.filename, JSON.stringify(parsedData,null,2));
-
-                return product.id;
-
-            } else { 
-
-                const parsedData = JSON.parse(data);
-
-                product.id = parsedData.length + 1;
-                parsedData.push(product);
-    
-                await fs.promises.writeFile(this.filename, JSON.stringify(parsedData,null,2));
-                return product.id;
-            }*/
-
+            await fs.promises.writeFile(this.filename, JSON.stringify(this.products,null,2));
+            return 0
         } catch (error) {
             console.log(`Error Code: ${error.code} | There was an error trying to save the product`);
+            return 1
         }
     }
-
-    /* async save(product) {
-
-        try {
-            const data = await this.getData();
-
-            if( data.length === 0) {
-
-                const parsedData = [];
-                product.id = 1;
-                parsedData.push(product)
-
-                await fs.promises.writeFile(this.filename, JSON.stringify(parsedData,null,2));
-
-                return product.id;
-
-            } else { 
-
-                const parsedData = JSON.parse(data);
-
-                product.id = parsedData.length + 1;
-                parsedData.push(product);
-    
-                await fs.promises.writeFile(this.filename, JSON.stringify(parsedData,null,2));
-                return product.id;
-            }
-
-
-        } catch (error) {
-            console.log(`Error Code: ${error.code} | There was an error trying to save the product`);
-        }
-    } */
-
-    /* async getById(id) {
-        
-        try {
-            return this.products.find((producto) => producto.id === Number(id));
-        } catch (error) {
-            console.log( `Error Code: ${error.code} | There was an error when trying to get the element with ID: ${id}` );
-        }
-    } */
-    
-    /* async deleteById(id) {
-        try {
-
-            id = Number(id);
-            const data = await this.getData();
-            const parsedData = JSON.parse(data);
-
-            const objectIdToBeRemoved = parsedData.find( product => product.id === id);
-
-            if (objectIdToBeRemoved) {
-                const index = parsedData.indexOf(objectIdToBeRemoved);
-                parsedData.splice(index, 1);
-
-                await fs.promises.writeFile(this.filename, JSON.stringify(parsedData,null,2));
-                return true;
-                
-            } else {
-                console.log(`The product with ID ${id} does not exist`);
-                return null;
-            }
-        } catch (error) {
-            console.log( `Error Code: ${error.code} | There was an error when trying to delete the element with ID: ${id}` );
-        }
-    }
-
-    async updateById(id, newData) {
-        try {
-            id = Number(id);
-            const data = await this.getData();
-            const parsedData = JSON.parse(data);
-            const objectIdToBeUpdated = parsedData.find( product => product.id === id );
-            
-            if (objectIdToBeUpdated) {
-                const index = parsedData.indexOf(objectIdToBeUpdated);
-                const {title, price, thumbnail} = newData;
-
-                parsedData[index]['title'] = title;
-                parsedData[index]['price'] = price;
-                parsedData[index]['thumbnail'] = thumbnail;
-
-                await fs.promises.writeFile(this.filename, JSON.stringify(parsedData));
-
-                return true;
-            } else {
-                console.log(`The product with ID ${id} does not exist`);
-                return null;
-            }
-
-        } catch (error) {
-            `Error Code: ${error.code} | There was an error when trying to update the element with ID: ${id}`
-        }
-    }
-    
-    async deleteAll() {
-        try {
-            await this.createEmptyFile();
-        } catch (error) {
-            console.log(`There was an error (${error.code}) when trying to delete all the products`);
-        }
-    } */
 }
 
 module.exports = ProductsContainer;
