@@ -9,7 +9,12 @@ class Cart {
         this.timestamp = timestamp
     }
 
-    async getCartProducts() {
+    addCart() {
+
+    }
+
+
+    getCartProducts() {
         return this.products
     }
 
