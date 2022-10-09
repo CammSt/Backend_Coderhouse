@@ -37,7 +37,6 @@ class ProductsContainer {
 
     findProduct(id) {
         //Finds product by id in products array -- returns product or undefined
-
         return this.products.find( producto => producto.id === id );
     }
 
@@ -56,7 +55,6 @@ class ProductsContainer {
         }
 
         const searchedProductCopy = structuredClone(searchedProduct);
-
         searchedProduct.updateProduct(data)
 
         let result = this.saveInFile()
