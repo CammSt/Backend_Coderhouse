@@ -1,90 +1,92 @@
 const { v4: uuidv4 } = require('uuid');
 
 const router = require('express').Router();
+const ProductsContainer = require('../components/ProductsContainer')
 const CartContainer = require('../components/CartContainer')
 
 const cartContainer = new CartContainer('carts.json')
+const productsContainer = new ProductsContainer('products.json')
 
 
 router.post('/', ( request , response ) => {
     // Crea un carrito y devuelve su id.
 
-    let timestamp = Date.now();
-    let id = uuidv4(); // unique id generator
+    let timestamp = Date.now()
+    let id = uuidv4() // unique id generator
 
-    cartContainer.addCart({timestamp, id})
+    const result = cartContainer.addCart({timestamp, id})
 
-    res.status(200).json({ "status": "success", "msg": "Cart created", "response" : { "cartID": id } })
+    if( result != undefined ) {
+        response.status(200).json({ "status": "success", "msg": "Cart successfully added" })
+    } else {
+        response.status(400).json({ "status": "error", "msg": "Cart not created"})
+    }
 });
 
 router.delete('/:id', ( request , response ) => {
     // Vacía un carrito y lo elimina.
+
+    const { id } = request.params
+    const result = cartContainer.deleteCart(id)
+    
+    if ( result != undefined ) {
+        response.status(200).json({ "status": "success", "msg": "Cart successfully deleted"})
+    } else {
+        response.status(404).json({ "status": "error", "msg": "Cart not found"})
+    }
 });
 
 router.get('/:id/productos', ( request , response ) => {
     // Me permite listar todos los productos guardados en el carrito
+
+    const { id } = request.params
+    
+    let cartProducts = cartContainer.getCartProducts(id)
+    if( cartProducts != undefined ){
+        response.status(200).json({ "status": "success", "response" : { "cartProducts": cartProducts }})
+    } else {
+        response.status(404).json({ "status": "error", "msg": "Cart not found"})
+    } 
 });
 
 router.post('/:id/productos', ( request , response ) => {
     // Para incorporar productos al carrito por su id de producto
+
+    const { id } = request.params
+    
+    const productToAdd = productsContainer.findProduct( body['id'] )
+
+    if ( productToAdd != undefined ) {
+        const result = cartContainer.addProductToCart(id, productToAdd);
+
+        if( result != undefined ) {
+            response.status(200).json({ "status": "success", "msg": "Product successfully added"})
+        } else {
+            response.status(400).json({ "status": "error", "msg": "Product not added"})
+        }
+    } else {
+        response.status(404).json({ "status": "error", "msg": "Product not found"})
+    }
 });
 
 router.delete('/:id/productos/:id_prod', ( request , response ) => {
     // Eliminar un producto del carrito por su id de carrito y de producto
+
+    const { id, id_prod } = request.params;
+
+    const searchedProduct = cartContainer.findProductInCart(id,id_prod);
+
+    if ( searchedProduct != undefined) {
+        const result = searchedCart.deleteProductFromCart(id)
+
+        if( result != undefined ) {
+            response.status(200).json({ "status": "success", "msg": "Product successfully deleted"})
+        } else {
+            response.status(400).json({ "status": "error", "msg": "Product not deleted"})
+        }
+    } else {
+        response.status(404).json({ "status": "error", "msg": "Product not found"})
+    }
 });
 
 module.exports = router;
-
-
-/* 
-
-// DELETE /api/carrito/id
-routerCart.delete('/:id', async (req, res) => {
-    const {id} = req.params;
-    const wasDeleted = await carrito.deleteById(id);
-    
-    wasDeleted 
-        ? res.status(200).json({"success": "cart successfully removed"})
-        : res.status(404).json({"error": "cart not found"})
-})
-
-// POST /api/carrito/:id/productos
-routerCart.post('/:id/productos', async(req,res) => {
-    const {id} = req.params;
-    const { body } = req;
-    
-    const product = await contenedor.getById(body['id']);
-    
-    if (product) {
-        const cartExist = await carrito.addToArrayById(id, {"products": product});
-        cartExist
-            ? res.status(200).json({"success" : "product added"})
-            : res.status(404).json({"error": "cart not found"})
-    } else {
-        res.status(404).json({"error": "product not found, verify the ID in the body content is correct."})
-    }
-})
-
-// GET /api/carrito/:id/productos
-routerCart.get('/:id/productos', async(req, res) => {
-    const { id } = req.params;
-    const cart = await carrito.getById(id)
-    
-    cart
-        ? res.status(200).json(cart.products)
-        : res.status(404).json({"error": "cart not found"})
-})
-
-// DELETE /api/carrito/:id/productos/:id_prod
-routerCart.delete('/:id/productos/:id_prod', async(req, res) => {
-    const {id, id_prod } = req.params;
-    const productExists = await contenedor.getById(id_prod);
-    if (productExists) {
-        const cartExists = await carrito.removeFromArrayById(id, id_prod, 'products')
-        cartExists
-            ? res.status(200).json({"success" : "product removed"})
-            : res.status(404).json({"error": "cart not found"})
-    } else {
-        res.status(404).json({"error": "product not found"})
-    }
-}) */

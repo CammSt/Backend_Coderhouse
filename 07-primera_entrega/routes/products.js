@@ -15,7 +15,7 @@ router.get('/:id?', ( request , response ) => {
             response.status(200).json(product)
 
         } else {  //Product doesnt exist
-            response.status(400).json({ "status": "error", "msg": "Product not found"})
+            response.status(404).json({ "status": "error", "msg": "Product not found"})
         }
     } else { //Return all products
 
@@ -36,7 +36,7 @@ router.post('/', ( request , response ) => {
         res.status(200).json({ "status": "success", "msg": `Product added with ID: ${result} `})
 
     } else { //Product wasnt added
-        response.status(400).json({ "status": "error", "msg": "Product not found"})
+        response.status(404).json({ "status": "error", "msg": "Product not found"})
     }
 });
 
@@ -60,7 +60,7 @@ router.put('/:id', ( request , response ) => {
         }
 
     } else { //Product doesnt exist
-        response.status(400).json({ "status": "error", "msg": "Product not found"})
+        response.status(404).json({ "status": "error", "msg": "Product not found"})
     }
 });
 
@@ -75,14 +75,14 @@ router.delete('/:id', ( request , response ) => {
         let result = productsContainer.deleteProduct(id)
 
         if( result != undefined ) {  //Product deleted successfully
-            response.status(200).json({ "status": "success", "msg": "Product deleted"})
+            response.status(200).json({ "status": "success", "msg": "Product successfully deleted"})
 
         } else { //Product wasnt deleted
             response.status(400).json({ "status": "error", "msg": "Product not deleted"})
         }
 
     } else { //Product doesnt exist
-        response.status(400).json({ "status": "error", "msg": "Product not found"})
+        response.status(404).json({ "status": "error", "msg": "Product not found"})
     }
 });
 

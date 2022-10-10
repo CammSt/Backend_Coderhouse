@@ -1,46 +1,142 @@
 const fs = require("fs");
 const Product = require('./Product')
+const Cart = require('./Cart')
 
-class Cart {
+class CartContainer {
 
-    constructor( id, timestamp ) {
-        this.products = [],
-        this.id = id,
-        this.timestamp = timestamp
-    }
-
-    addCart() {
-
+    constructor( filename ) {
+        this.filename = filename,
+        this.carts = []
     }
 
 
-    getCartProducts() {
-        return this.products
+
+    /////////////////////////////////////  CART METHODS /////////////////////////////////////////
+
+    addCart( newCartData ) {
+        let id = this.carts.length + 1
+
+        let { timeStamp, products } = newCartData
+
+        let newCart = new Cart(id, timeStamp, products)
+        this.carts.push(newCart)
+
+        let result = this.saveInFile()
+        if( result === 1) {
+            //if saving in file fails the cart gets deleted from the carts' local list
+            this.deleteCart(id)
+            return undefined
+        } else {
+            //if cart is saved in file its id gets returned
+            return newCart.id
+        }
     }
 
-    addProductToCart(product) {
+    findCart(id) {
+        //Finds cart by id in carts array -- returns cart or undefined
+        return this.carts.find( cart => cart.id === id );
+    }
+
+    cartExists(id){
+        //Returns boolean indicating if cart id exists in carts array  -- returns true or false
+        return this.findProduct(id) != undefined
+    }
+
+    updateCart(id, data) {
+        //Modify product searched by id in products array and saving it in file  -- returns undefined or product
+
+        let searchedProduct = this.findProduct(id)
+
+        if( searchedProduct === undefined ) {
+            return undefined
+        }
+
+        const searchedProductCopy = structuredClone(searchedProduct);
+        searchedProduct.updateProduct(data)
+
+        let result = this.saveInFile()
+        if( result === 1) {
+            //if saving in file fails the product returns to its original state
+            let oldData = searchedProductCopy.productData()
+            searchedProduct.updateProduct(oldData)
+            return undefined
+        } else {
+            //if product is saved in file it gets returned updated
+            return this.products[index]
+        }
+    }
+
+    deleteCart(id) {
+        //Deletes product by id from products list and file
+        let searchedCart = this.findProduct(id)
+
+        if( searchedCart === undefined ) {
+            return undefined
+        } 
+
+        let index = this.products.indexOf(searchedCart)
+        this.products.splice(index,1)
+
+        let result = this.saveInFile()
+        if( result === 1) {
+            //if saving in file fails the cart gets added back to carts list
+            this.addCart(searchedCart)
+            return undefined
+        } else {
+            //if cart is deleted the return is the cart
+            return searchedCart
+        }
+    }
+
+
+    //////////////////////////////////////////////////////////////////////////////////////////
+
+    /////////////////////////////// PRODUCTS IN CART METHODS ////////////////////////////////
+
+    getCartProducts(id) {
+        const searchedCart = this.findCart(id)
+        if( searchedCart != undefined ) {
+            return searchedCart.getProducts()
+        } else {
+            return undefined
+        }
+    }
+
+    addProductToCart(cartID,product) {
        //Adds a product to the products array and saves it in file -- returns undefined or product's id
 
-       let id = this.products.length + 1
-       let { timeStamp, name, description, code, image, price, stock } = product
+       const searchedCart = this.findCart(cartID)
 
-       let newProduct = new Product(id, timeStamp, name, description, code, image, Number(price), stock)
-       this.products.push(newProduct)
-
-       let result = this.saveInFile()
-       if( result === 1) {
-           //if saving in file fails the product gets deleted from the products' local list
-           this.deleteProduct(id)
-           return undefined
+       if( searchedCart != undefined ) {
+           let id = this.products.length + 1
+           let { timeStamp, name, description, code, image, price, stock } = product
+    
+           let newProduct = new Product(id, timeStamp, name, description, code, image, Number(price), stock)
+           this.products.push(newProduct)
+    
+           let result = this.saveInFile()
+           if( result === 1) {
+               //if saving in file fails the product gets deleted from the products' local list
+               this.deleteProduct(id)
+               return undefined
+           } else {
+               //if product is saved in file its id gets returned
+               return product.id
+           }
        } else {
-           //if product is saved in file its id gets returned
-           return product.id
+            return undefined
        }
     }
 
-    findProductInCart(id) {
+    findProductInCart( cartID, productID ) {
         //Finds product by id in products array -- returns product or undefined
-        return this.products.find( producto => producto.id === id );
+        const searchedCart = this.findCart(cartID)
+
+        if( searchedCart != undefined ) {
+            return searchedCart.findProductInCart(productID)
+        } else {
+            return undefined
+        }
     }
 
     productExistsInCart(id){
@@ -94,8 +190,9 @@ class Cart {
         }
     }
 
+    //////////////////////////////////////////////////////////////////////////////////////////
 
-    //// ------- FILE METHODS -------- /////
+    ///////////////////////////////// FILE METHODS //////////////////////////////////////////
 
     async readFileOrCreateOne() {
         try {
@@ -128,13 +225,13 @@ class Cart {
 
     async saveInFile() {
         try {
-            await fs.promises.writeFile(this.filename, JSON.stringify(this.products,null,2));
+            await fs.promises.writeFile(this.filename, JSON.stringify(this.carts,null,2));
             return 0
         } catch (error) {
-            console.log(`Error Code: ${error.code} | There was an error trying to save the product`);
+            console.log(`Error Code: ${error.code} | There was an error trying to save the file`);
             return 1
         }
     }
 }
 
-module.exports = Cart;
+module.exports = CartContainer;

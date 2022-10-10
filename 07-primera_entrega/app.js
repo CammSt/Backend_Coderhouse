@@ -17,6 +17,11 @@ app.use(express.static('public'));
 app.use('/productos',products )
 app.use('/carrito',cart )
 
+/* app.get('/',(req, res) =>{
+  res.redirect('/productos')
+}) */
+
+
 app.use((error, req, res, next) => {
   if(error.statusCode){
     return res.status(error.statusCode).send(`Error ${error.statusCode}`)
