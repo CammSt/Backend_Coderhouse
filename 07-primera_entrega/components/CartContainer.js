@@ -168,26 +168,36 @@ class CartContainer {
         }
     }
 
-    deleteProductFromCart(id) {
+    deleteProductFromCart(cartID, productID) {
         //Deletes product by id from products list and file
-        let searchedProduct = this.findProduct(id)
 
-        if( searchedProduct === undefined ) {
-            return undefined
-        } 
+        const searchedCart = this.findCart(cartID)
 
-        let index = this.products.indexOf(searchedProduct)
-        this.products.splice(index,1)
+        if( searchedCart != undefined ) {
+            let searchedProduct = this.findProductInCart(cartID, productID)
 
-        let result = this.saveInFile()
-        if( result === 1) {
-            //if saving in file fails the product gets added back to products list
-            this.addProduct(searchedProduct)
-            return undefined
+            if( searchedProduct === undefined ) {
+                return undefined
+            } 
+
+            let index = this.products.indexOf(searchedProduct)
+            this.products.splice(index,1)
+
+            let result = this.saveInFile()
+            if( result === 1) {
+                //if saving in file fails the product gets added back to products list
+                this.addProductToCart(cartID,searchedProduct)
+                return undefined
+            } else {
+                //if product is deleted the return is the product
+                return searchedProduct
+            }
         } else {
-            //if product is deleted the return is the product
-            return searchedProduct
+            return undefined
         }
+
+
+        
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////

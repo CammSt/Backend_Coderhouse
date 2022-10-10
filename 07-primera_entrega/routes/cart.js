@@ -65,7 +65,7 @@ router.post('/:id/productos', ( request , response ) => {
             response.status(400).json({ "status": "error", "msg": "Product not added"})
         }
     } else {
-        response.status(404).json({ "status": "error", "msg": "Product not found"})
+        response.status(404).json({ "status": "error", "msg": "Product/Cart not found"})
     }
 });
 
@@ -77,7 +77,7 @@ router.delete('/:id/productos/:id_prod', ( request , response ) => {
     const searchedProduct = cartContainer.findProductInCart(id,id_prod);
 
     if ( searchedProduct != undefined) {
-        const result = searchedCart.deleteProductFromCart(id)
+        const result = cartContainer.deleteProductFromCart(id, id_prod)
 
         if( result != undefined ) {
             response.status(200).json({ "status": "success", "msg": "Product successfully deleted"})
@@ -85,7 +85,7 @@ router.delete('/:id/productos/:id_prod', ( request , response ) => {
             response.status(400).json({ "status": "error", "msg": "Product not deleted"})
         }
     } else {
-        response.status(404).json({ "status": "error", "msg": "Product not found"})
+        response.status(404).json({ "status": "error", "msg": "Product/Cart not found"})
     }
 });
 
