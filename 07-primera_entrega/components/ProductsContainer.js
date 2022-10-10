@@ -1,5 +1,4 @@
 const fs = require("fs");
-const Product = require('./Product')
 
 class ProductsContainer {
 
@@ -9,86 +8,79 @@ class ProductsContainer {
         this.readFileOrCreateOne()
     }
 
-    async getProducts() {
-        //Returns all products
-
+    getProducts() {  //Returns all products
         return this.products
     }
 
-    addProduct(product) {
-        //Adds a product to the products array and saves it in file -- returns undefined or product's id
-
+    addProduct(product) {  //Adds a product to the products array and saves it in file -- returns undefined or product's id
+        
         let id = this.products.length + 1
-        let { timeStamp, name, description, code, image, price, stock } = product
+        product.id = Number(id)
+        product.price = Number(product.price)
+        this.products.push(product)
 
-        let newProduct = new Product(id, timeStamp, name, description, code, image, Number(price), stock)
-        this.products.push(newProduct)
+        this.saveInFile()
 
-        let result = this.saveInFile()
-        if( result === 1) {
-            //if saving in file fails the product gets deleted from the products' local list
-            this.deleteProduct(id)
-            return undefined
-        } else {
-            //if product is saved in file its id gets returned
-            return product.id
-        }
+        return product.id
     }
 
-    findProduct(id) {
-        //Finds product by id in products array -- returns product or undefined
-        return this.products.find( producto => producto.id === id );
+    findProduct(id) {  //Finds product by id in products array -- returns product or undefined
+        return this.products.find( producto => producto.id === Number(id) );
+        
     }
 
-    productExists(id){
-        //Returns boolean indicating if product id exists in products array  -- returns true or false
+    productExists(id){  //Returns boolean indicating if product id exists in products array  -- returns true or false
         return this.findProduct(id) != undefined
     }
 
-    updateProduct(id, data) {
-        //Modify product searched by id in products array and saving it in file  -- returns undefined or product
+    updateProduct(id, data) { //Modify product searched by id in products array and saving it in file  -- returns undefined or product
 
         let searchedProduct = this.findProduct(id)
-
         if( searchedProduct === undefined ) {
             return undefined
         }
+        
+        let index = this.products.indexOf(searchedProduct)
 
-        const searchedProductCopy = structuredClone(searchedProduct);
-        searchedProduct.updateProduct(data)
-
-        let result = this.saveInFile()
-        if( result === 1) {
-            //if saving in file fails the product returns to its original state
-            let oldData = searchedProductCopy.productData()
-            searchedProduct.updateProduct(oldData)
-            return undefined
-        } else {
-            //if product is saved in file it gets returned updated
-            return this.products[index]
+        if( data.timestamp != undefined ) { 
+            this.products[index].timestamp = data.timestamp
         }
+        if( data.title != undefined ) { 
+            this.products[index].title = data.title
+        }
+        if( data.price != undefined ) { 
+            this.products[index].price = data.price
+        }
+        if( data.description != undefined ) { 
+            this.products[index].description = data.description
+        }
+        if( data.code != undefined ) { 
+            this.products[index].code = data.code
+        }
+        if( data.stock != undefined ) { 
+            this.products[index].stock = data.stock
+        }
+        if( data.image != undefined ) { 
+            this.products[index].image = data.image
+        }
+        
+        this.saveInFile()
+       
+        return this.products[index]
     }
 
-    deleteProduct(id) {
-        //Deletes product by id from products list and file
-        let searchedProduct = this.findProduct(id)
+    deleteProduct(id) {  //Deletes product by id from products list and file
 
+        let searchedProduct = this.findProduct(id)
         if( searchedProduct === undefined ) {
             return undefined
         } 
 
         let index = this.products.indexOf(searchedProduct)
         this.products.splice(index,1)
-
-        let result = this.saveInFile()
-        if( result === 1) {
-            //if saving in file fails the product gets added back to products list
-            this.addProduct(searchedProduct)
-            return undefined
-        } else {
-            //if product is deleted the return is the product
-            return searchedProduct
-        }
+        this.saveInFile()
+        
+        return searchedProduct
     }
 
 
@@ -97,7 +89,8 @@ class ProductsContainer {
     async readFileOrCreateOne() {
         try {
             let readData = await fs.promises.readFile(this.filename, "utf-8");
-            
+
+
             if(readData.length != 0){
                 this.products = JSON.parse(readData) 
             }
@@ -126,10 +119,8 @@ class ProductsContainer {
     async saveInFile() {
         try {
             await fs.promises.writeFile(this.filename, JSON.stringify(this.products,null,2));
-            return 0
         } catch (error) {
             console.log(`Error Code: ${error.code} | There was an error trying to save the file`);
-            return 1
         }
     }
 }
