@@ -10,8 +10,11 @@ class CartContainer {
     }
 
 
-
     /////////////////////////////////////  CART METHODS /////////////////////////////////////////
+
+    getAllCarts() {
+        return this.carts
+    }
 
     addCart( newCartData ) {
         let id = this.carts.length + 1

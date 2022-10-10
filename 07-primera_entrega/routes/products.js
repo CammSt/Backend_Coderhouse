@@ -20,7 +20,7 @@ router.get('/:id?', ( request , response ) => {
     } else { //Return all products
 
         const products =  productsContainer.getProducts()
-        response.status(200).json(products);
+        response.status(200).json({ "status": "success", "response": {products} })
     }
 });
 
@@ -33,7 +33,7 @@ router.post('/', ( request , response ) => {
     let result = productsContainer.addProduct(body)
 
     if( result != undefined ) { //Product added successfully
-        res.status(200).json({ "status": "success", "msg": `Product added with ID: ${result} `})
+        response.status(200).json({ "status": "success", "msg": `Product added with ID: ${result} `})
 
     } else { //Product wasnt added
         response.status(404).json({ "status": "error", "msg": "Product not found"})

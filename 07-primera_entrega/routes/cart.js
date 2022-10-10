@@ -7,6 +7,15 @@ const CartContainer = require('../components/CartContainer')
 const cartContainer = new CartContainer('carts.json')
 const productsContainer = new ProductsContainer('products.json')
 
+router.get('/', ( request , response ) => {
+    // Devuelve todos los carritos
+
+    let carts = cartContainer.getAllCarts()
+
+    response.status(200).json({ "status": "success", "response": {carts} })
+});
+
+
 
 router.post('/', ( request , response ) => {
     // Crea un carrito y devuelve su id.
