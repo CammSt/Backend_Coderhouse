@@ -52,6 +52,10 @@ const cartsRouter = require('express').Router()
 app.use('/api/productos', productsRouter )
 app.use('/api/carrito', cartsRouter )
 
+app.get('*', function(req, res){
+    res.status(404).send({"status":"error", "msg":"Not implemented"});
+});
+
 //////////////////////////////////// PRODUCTS ROUTES ///////////////////////////////////
 
 
