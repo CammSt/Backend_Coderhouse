@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const app = express();
 
 const PORT = process.env.PORT
+const admin = true
 
 app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -36,14 +37,14 @@ const cartContainer = new CartContainer('carts.json')
 
 
 //AUTH MIDDLEWARE
-const authMiddleware = app.use( ( request, response, next ) => {
+/* const authMiddleware = app.use( ( request, response, next ) => {
 
 	if( request.header('Authorization') === process.env.AUTH_TOKEN  ) {  // Verified client
 		next()
 	} else {  // Not verified client
 		response.status(401).json({ "status": "error", "msg": "Unauthorized" })
 	}
-})
+}) */
 
 const productsRouter = require('express').Router()
 const cartsRouter = require('express').Router()
@@ -55,6 +56,7 @@ app.use('/api/carrito', cartsRouter )
 
 
 productsRouter.get('/:id?', ( request , response ) => { // Me permite listar todos los productos disponibles ó un producto por su id (disponible para usuarios y administradores)
+
     const { id } = request.params;
 
     if( id != undefined ) {  //Return specified product
@@ -74,7 +76,12 @@ productsRouter.get('/:id?', ( request , response ) => { // Me permite listar tod
     }
 });
 
-productsRouter.post('/', authMiddleware, ( request , response ) => {  // Para incorporar productos al listado (disponible para administradores)
+productsRouter.post('/', ( request , response ) => {  // Para incorporar productos al listado (disponible para administradores)
+    
+    if( admin != true) {  // Unverified client
+		response.status(401).json({ "status": "error", "msg": "Unauthorized" })
+        return
+    }
 
     const { body } = request
     body.timestamp = Date.now()
@@ -82,15 +89,20 @@ productsRouter.post('/', authMiddleware, ( request , response ) => {  // Para in
     let result = productsContainer.addProduct(body)
 
     if( result != undefined ) {
-        response.status(200).json({ "status": "success", "msg": `Product added with ID: ${result} `})
+        response.status(200).json({ "status": "success", "msg": "Product successfully added", "response": {id: result}})
 
     } else {
         response.status(400).json({ "status": "error", "msg": "Product not added"})
     }
 });
 
-productsRouter.put('/:id', authMiddleware, ( request , response ) => { // Actualiza un producto por su id (disponible para administradores)
-    
+productsRouter.put('/:id', ( request , response ) => { // Actualiza un producto por su id (disponible para administradores)
+   
+    if( admin != true) {  // Unverified client
+		response.status(401).json({ "status": "error", "msg": "Unauthorized" })
+        return
+    }
+
     const { id } = request.params
     const { body } = request
 
@@ -110,7 +122,12 @@ productsRouter.put('/:id', authMiddleware, ( request , response ) => { // Actual
     }
 });
 
-productsRouter.delete('/:id', authMiddleware, ( request , response ) => {  // Borra un producto por su id (disponible para administradores)
+productsRouter.delete('/:id', ( request , response ) => {  // Borra un producto por su id (disponible para administradores)
+   
+    if( admin != true) {  // Unverified client
+		response.status(401).json({ "status": "error", "msg": "Unauthorized" })
+        return
+    }
 
     const { id } = request.params;
     const product = productsContainer.findProduct(id)
@@ -134,7 +151,12 @@ productsRouter.delete('/:id', authMiddleware, ( request , response ) => {  // Bo
 
 //////////////////////////////////// CART ROUTES ///////////////////////////////////
 
-cartsRouter.post('/', authMiddleware, ( request , response ) => {  // Crea un carrito y devuelve su id.
+cartsRouter.post('/', ( request , response ) => {  // Crea un carrito y devuelve su id.
+   
+    if( admin != true) {  // Unverified client
+		response.status(401).json({ "status": "error", "msg": "Unauthorized" })
+        return
+    }
 
     const result = cartContainer.addCart()
 
@@ -145,7 +167,12 @@ cartsRouter.post('/', authMiddleware, ( request , response ) => {  // Crea un ca
     }
 });
 
-cartsRouter.delete('/:id', authMiddleware, ( request , response ) => {  // Vacía un carrito y lo elimina.
+cartsRouter.delete('/:id', ( request , response ) => {  // Vacía un carrito y lo elimina.
+   
+    if( admin != true) {  // Unverified client
+		response.status(401).json({ "status": "error", "msg": "Unauthorized" })
+        return
+    }
 
     const { id } = request.params
     const result = cartContainer.deleteCart(id)
@@ -157,7 +184,12 @@ cartsRouter.delete('/:id', authMiddleware, ( request , response ) => {  // Vací
     }
 });
 
-cartsRouter.get('/:id/productos', authMiddleware, ( request , response ) => { // Me permite listar todos los productos guardados en el carrito
+cartsRouter.get('/:id/productos', ( request , response ) => { // Me permite listar todos los productos guardados en el carrito
+   
+    if( admin != true) {  /// Unverified client
+		response.status(401).json({ "status": "error", "msg": "Unauthorized" })
+        return
+    }
 
     const { id } = request.params
     
@@ -169,7 +201,12 @@ cartsRouter.get('/:id/productos', authMiddleware, ( request , response ) => { //
     } 
 });
 
-cartsRouter.post('/:id/productos', authMiddleware, ( request , response ) => { // Para incorporar productos al carrito por su id de producto
+cartsRouter.post('/:id/productos', ( request , response ) => { // Para incorporar productos al carrito por su id de producto
+   
+    if( admin != true) {  // Unverified client
+		response.status(401).json({ "status": "error", "msg": "Unauthorized" })
+        return
+    }
 
     const { id } = request.params
     
@@ -188,7 +225,12 @@ cartsRouter.post('/:id/productos', authMiddleware, ( request , response ) => { /
     }
 });
 
-cartsRouter.delete('/:id/productos/:id_prod', authMiddleware, ( request , response ) => { // Eliminar un producto del carrito por su id de carrito y de producto
+cartsRouter.delete('/:id/productos/:id_prod', ( request , response ) => { // Eliminar un producto del carrito por su id de carrito y de producto
+   
+    if( admin != true) {  // Unverified client
+		response.status(401).json({ "status": "error", "msg": "Unauthorized" })
+        return
+    }
 
     const { id, id_prod } = request.params;
 

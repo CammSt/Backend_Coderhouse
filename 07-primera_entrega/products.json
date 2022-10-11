@@ -4,7 +4,7 @@
     "timestamp": 1648319850314,
     "title": "Product 1",
     "price": 10,
-    "description": "Some description for product 1",
+    "description": "Some description for Product 1",
     "code": "XP-1",
     "image": "someUrlProduct1.com",
     "stock": 100
@@ -14,7 +14,7 @@
     "timestamp": 1648319850314,
     "title": "Product 2",
     "price": 20,
-    "description": "Some description for product 2",
+    "description": "Some description for Product 2",
     "code": "XP-2",
     "image": "someUrlProduct2.com",
     "stock": 200
@@ -22,9 +22,9 @@
   {
     "id": 3,
     "timestamp": 1648319850314,
-    "title": "Product 31",
+    "title": "Product 3",
     "price": 30,
-    "description": "Some description for product 3",
+    "description": "Some description for Product 3",
     "code": "XP-3",
     "image": "someUrlProduct3.com",
     "stock": 300
@@ -34,7 +34,7 @@
     "timestamp": 1648319850314,
     "title": "Product 4",
     "price": 40,
-    "description": "Some description for product 4",
+    "description": "Some description for Product 4",
     "code": "XP-4",
     "image": "someUrlProduct4.com",
     "stock": 400
