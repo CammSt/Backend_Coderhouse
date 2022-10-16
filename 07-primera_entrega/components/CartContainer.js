@@ -35,17 +35,13 @@ class CartContainer {
     }
 
     deleteCart(id) { //Deletes product by id from products list and file
-        let searchedCart = this.findCart(id)
+        let index = this.carts.findIndex( cart => cart.id === Number(id))
 
-        if( searchedCart === undefined ) {
-            return undefined
-        } 
-
-        let index = this.carts.indexOf(searchedCart)
-        this.carts.splice(index,1)
+        if( index === -1) return undefined
+        let deletedCart = this.carts.splice(index,1)
 
         this.saveInFile()
-        return searchedCart
+        return deletedCart
     }
 
 
@@ -54,46 +50,33 @@ class CartContainer {
     /////////////////////////////// PRODUCTS IN CART METHODS ////////////////////////////////
 
     getCartProducts(cartID) {
-        const searchedCart = this.findCart(cartID)
 
-        if( searchedCart != undefined ) {
-            let index = this.carts.indexOf(searchedCart)
-            return this.carts[index].products
+        let index = this.carts.findIndex( cart => cart.id === Number(cartID))
+        if( index === -1) return undefined
 
-        } else {
-            return undefined
-        }
+        return this.carts[index].products
     }
 
     addProductToCart(cartID,product) {  //Adds a product to the products array and saves it in file -- returns undefined or product's id
 
-        const searchedCart = this.findCart(cartID)
+        let index = this.carts.findIndex( cart => cart.id === Number(cartID))
+        if( index === -1) return undefined
+    
+        product.id = Number(product.id)
+        product.price = Number(product.price)
+        this.carts[index].products.push(product)
 
-        if( searchedCart != undefined ) {
-
-            let index = this.carts.indexOf(searchedCart)
-            product.id = Number(product.id)
-            product.price = Number(product.price)
-            this.carts[index].products.push(product)
-
-            this.saveInFile()
-            
-            return product.id
-        } else {
-            return undefined
-        }
+        this.saveInFile()
+        
+        return product.id
+       
     }
 
     findProductInCart( cartID, productID ) {  //Finds product by id in products array -- returns product or undefined
-        const searchedCart = this.findCart(cartID)
+        let index = this.carts.findIndex( cart => cart.id === Number(cartID))
+        if( index === -1) return undefined
 
-        if( searchedCart != undefined ) {
-            let index = this.carts.indexOf(searchedCart)
-            return this.carts[index].products.find( product => product.id === Number(productID) )
-
-        } else {
-            return undefined
-        }
+        return this.carts[index].products.find( product => product.id === Number(productID) )
     }
 
     productExistsInCart(id){  //Returns boolean indicating if product id exists in products array  -- returns true or false
@@ -102,27 +85,18 @@ class CartContainer {
 
     deleteProductFromCart(cartID, productID) {  //Deletes product by id from products list and file
 
-        const searchedCart = this.findCart(cartID)
+        let cartIndex = this.carts.findIndex( cart => cart.id === Number(cartID))
+        if( cartIndex === -1) return undefined
 
-        if( searchedCart != undefined ) {
+        let searchedProduct = this.findProductInCart(cartID, productID)
 
-            let cartIndex = this.carts.indexOf(searchedCart)
+        if( searchedProduct === undefined ) return undefined
 
-            let searchedProduct = this.findProductInCart(cartID, productID)
+        let productIndex = this.carts[cartIndex].products.indexOf(searchedProduct)
+        this.carts[cartIndex].products.splice(productIndex,1)
 
-            if( searchedProduct === undefined ) {
-                return undefined
-            } 
-
-            let productIndex = this.carts[cartIndex].products.indexOf(searchedProduct)
-            this.carts[cartIndex].products.splice(productIndex,1)
-
-            this.saveInFile()
-            return searchedProduct
-            
-        } else {
-            return undefined
-        }   
+        this.saveInFile()
+        return searchedProduct
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////

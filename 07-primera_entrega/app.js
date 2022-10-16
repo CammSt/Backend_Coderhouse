@@ -11,7 +11,6 @@ app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.static('public'));
 
-
 app.use((error, req, res, next) => {
 	if(error.statusCode){
 		return res.status(error.statusCode).send(`Error ${error.statusCode}`)
@@ -51,10 +50,6 @@ const cartsRouter = require('express').Router()
 
 app.use('/api/productos', productsRouter )
 app.use('/api/carrito', cartsRouter )
-
-app.get('*', function(req, res){
-    res.status(404).send({"status":"error", "msg":"Not implemented"});
-});
 
 //////////////////////////////////// PRODUCTS ROUTES ///////////////////////////////////
 
@@ -252,3 +247,10 @@ cartsRouter.delete('/:id/productos/:id_prod', ( request , response ) => { // Eli
         response.status(404).json({ "status": "error", "msg": "Product/Cart not found"})
     }
 });
+
+
+app.use( '*', ( request, response ) => {
+	const path = request.params
+    const method = request.method
+    response.send( { "status": "error", "msg": `Route '${path[0]}' failed -- method ${method} not implemented` })
+})

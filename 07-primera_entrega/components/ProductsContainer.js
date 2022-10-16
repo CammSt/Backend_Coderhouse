@@ -35,12 +35,9 @@ class ProductsContainer {
 
     updateProduct(id, data) { //Modify product searched by id in products array and saving it in file  -- returns undefined or product
 
-        let searchedProduct = this.findProduct(id)
-        if( searchedProduct === undefined ) {
-            return undefined
-        }
-        
-        let index = this.products.indexOf(searchedProduct)
+        let index = this.products.findIndex( product => product.id ===  Number(id))
+
+        if( index === -1) return undefined
 
         if( data.timestamp != undefined ) { 
             this.products[index].timestamp = data.timestamp
@@ -71,16 +68,14 @@ class ProductsContainer {
 
     deleteProduct(id) {  //Deletes product by id from products list and file
 
-        let searchedProduct = this.findProduct(id)
-        if( searchedProduct === undefined ) {
-            return undefined
-        } 
+        let index = this.products.findIndex( product => product.id ===  Number(id))
 
-        let index = this.products.indexOf(searchedProduct)
-        this.products.splice(index,1)
+        if( index === -1 ) return undefined
+
+        let deletedProduct = this.products.splice(index,1)
         this.saveInFile()
         
-        return searchedProduct
+        return deletedProduct
     }
 
 
