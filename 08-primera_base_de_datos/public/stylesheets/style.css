@@ -1,0 +1,122 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+  
+a {
+  color: #00B7FF;
+}
+
+h1 {
+  width: 70%;
+  color: #DE4E53;
+}
+
+#form-product {
+  text-align: center;
+  width: 70%;
+  margin-left: 15%;
+}
+
+.formItem {
+  margin-bottom: 3%;
+  text-align: left;
+}
+
+.formLabel { 
+  margin-bottom: 2%;
+  text-decoration: underline;
+  padding-left: 2%;
+  
+}
+
+.submitButton {
+  background-color: #DE4E53;
+  border-color: #DE4E53;
+  width: 50%;
+  margin-bottom: 3%;
+}
+
+.submitButton:active {
+  background-color: #DE4E53;
+  border-color: #DE4E53;
+  width: 50%;
+}
+
+.goBackButton {
+  margin-bottom: 3%;
+  background-color: #DE4E53;
+  border-color: #DE4E53;
+  padding-inline: 2%;
+  color: white;
+  border-radius: .5vw;
+}
+
+.tableImage {
+  width: 7vw;
+  height: 7vw;
+}
+
+#chatHistory {
+  list-style-type: none;
+}
+
+.messagesContainer {
+  margin-top: 4%;
+  text-decoration: none;
+}
+
+.inputsFormContainer {
+  display:flex;
+}
+.messageFormInput {
+  margin-right: 3%;
+  margin-bottom: 2%;
+}
+
+.messageFormInput input {
+  width: 100%;
+  margin-top: 4%;
+}
+
+.sendMessageButton {
+  background-color: #DE4E53;
+  border-color: #DE4E53;
+  width: 10%;
+  margin-bottom: 3%;
+}
+
+
+.messageContainer {
+  margin-bottom: 2%;
+  border: solid .5px pink;
+  width: 40%;
+  padding: 1%;
+}
+.messageFirstRow {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1%;
+}
+.dateContainer {
+  display: flex;
+  width: 30%;
+  justify-content: space-between;
+}
+
+.messageUser {
+  color:  #DE4E53;
+  text-decoration: underline;
+  font-size: 1.5vw;
+  font-style: italic;
+}
+.messageText {
+  display: flex;
+  width: 30%;
+  margin-left: 3%;
+
+}
+.messageDate {
+  font-style: oblique ;
+  
+}
