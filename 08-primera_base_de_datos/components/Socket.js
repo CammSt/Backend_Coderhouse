@@ -15,26 +15,25 @@ class Socket {
 		io.on('connection', async (socket) => {
 			console.log("\n 🟢  Client connected\n");
 			
-			let products = await db.getAll( 'sqlite', 'products' )
-
+			let products = await db.getAll( 'knex', 'products' )
 			if(products.length != 0) {
 				socket.emit('firstLoadProducts', products )
 			}
 
-			/* const messages = await chat.getAll();
+			const messages = await db.getAll( 'sqlite', 'messages' )
 			if(messages.length != 0) {
-				socket.emit('firstLoadMessageWs', messages)
-			} */
+				socket.emit('firstLoadMessages', messages)
+			}
 
-			/* socket.on('newProduct', async(data) => {
-				await product.save(data);
+			socket.on('newProduct', async(data) => {
+				await db.saveInTable( data, 'knex', 'products' );
 				io.sockets.emit('updateProducts', data);
 			})
 
 			socket.on('newMessage', async(data) => {
-				await chat.save(data);
+				await db.saveInTable( data, 'sqlite', 'messages' );
 				io.sockets.emit('updateMessages', data)
-			}) */
+			})
 
 			socket.on('disconnect', () => {
 				console.log("\n 🔴  Client disconnected\n");

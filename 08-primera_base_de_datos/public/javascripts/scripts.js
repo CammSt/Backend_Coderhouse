@@ -61,6 +61,7 @@
     })
 
 	socket.on("firstLoadMessages", (messages) => {
+        console.log("messages en socket on ", messages);
         fetch("javascripts/templates/message.hbs")
             .then( template => template.text() )
             .then( text => {

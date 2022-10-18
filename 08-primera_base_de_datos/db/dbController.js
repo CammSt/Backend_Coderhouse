@@ -5,9 +5,6 @@ class dbController {
     
     constructor( tableName, knexConfig ) {
 
-        console.log("tableName ",tableName);
-        console.log("knexConfig ",knexConfig);
-
         this.knexConfig =  knexConfig
 
         this.sqliteConfig = {
@@ -17,10 +14,9 @@ class dbController {
             },
             useNullAsDefault: true,
         }
-
-        console.log("sqliteConfig ", this.sqliteConfig);
         
         this.createTable(tableName);
+        this.createMessageTable()
     }
 
     async createTable( tableName ) {
@@ -30,9 +26,8 @@ class dbController {
         try {
             const exists = await knexInstance.schema.hasTable(tableName);
 
-
             if( exists ) {
-                console.log(`La tabla ${tableName} ya existe` );
+                console.log(`The table ${tableName} already exists` );
                 return;
             }
 
@@ -63,7 +58,7 @@ class dbController {
             const exists = await knexInstance.schema.hasTable('messages');
 
             if( exists ) {
-                console.log('La tabla mensajes ya existe.');
+                console.log(`The table messages already exists`);
                 return;
             }
 
@@ -72,6 +67,7 @@ class dbController {
                 table.string('message').notNullable();
                 table.string('email', 25).notNullable();
                 table.string('date', 30).notNullable();
+                table.string('time', 30).notNullable();
             });
 
         } catch (error) {
@@ -156,7 +152,7 @@ class dbController {
 
         try {
             return await knexInstance.from(table).select("*");
-            
+
         } catch ( error ) {
 
             console.log("An error occured while recovering all the elements from the table ", table );
