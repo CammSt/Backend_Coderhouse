@@ -19,6 +19,20 @@ switch (process.env.PERS) {
         productsDao = new ProductsDaoMongoDB()
         cartsDao = new CartsDaoMongoDB()
         break
+    case 'json':
+        const { default: ProductsDaoArchive } = await import('./products/ProductsDaoArchive.js')
+        const { default: CartsDaoArchive } = await import('./carts/CartsDaoArchive.js')
+
+        productsDao = new ProductsDaoArchive()
+        cartsDao = new CartsDaoArchive()
+        break
+    default:
+        const { default: ProductsDaoMem } = await import('./products/ProductsDaoMem.js')
+        const { default: CartsDaoMem } = await import('./carts/CartsDaoMem.js')
+
+        productsDao = new ProductsDaoMem()
+        cartsDao = new CartsDaoMem()
+        break
 }
 
 export { productsDao, cartsDao }

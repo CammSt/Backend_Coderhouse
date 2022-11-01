@@ -199,6 +199,7 @@ cartsRouter.post('/:id/products', async ( request , response ) => { // Para inco
         if( cart != undefined ) {
 
             cart.products.push(productToAdd)
+
             const result = await cartsContainer.update( cartID, cart )
             
             if( result != undefined) {
@@ -226,7 +227,7 @@ cartsRouter.delete('/:id/products/:id_prod', async ( request , response ) => { /
 
     if ( cart != undefined ) {
 
-        const index = cart.products.findIndex( product => product.id === id_prod)
+        const index = cart.products.findIndex( product => product.id === Number(id_prod))
 
         if (index != -1) {
 
