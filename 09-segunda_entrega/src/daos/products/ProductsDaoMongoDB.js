@@ -1,4 +1,4 @@
-import MongoDBContainer from "../../contenedores/MongoDBContainer.js"
+import MongoDBContainer from "../../containers/MongoDBContainer.js"
 
 class ProductsDaoMongoDB extends MongoDBContainer {
 
